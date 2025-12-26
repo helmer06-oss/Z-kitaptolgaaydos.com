@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Z-Kitap: Full Fit | Tolga Aydos</title>
+    <title>Z-Kitap: Auto & Responsive | Tolga Aydos</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -111,15 +111,15 @@
         }
         .prev { left: 15px; } .next { right: 15px; }
 
-        /* --- SAĞ PANEL (TAM OTURAN SİSTEM) --- */
+        /* --- SAĞ PANEL --- */
         .right-panel {
             width: 320px;
             background: var(--panel-bg); border-radius: 20px;
             padding: 20px;
-            display: flex; flex-direction: column; /* Alt alta diz */
-            justify-content: space-between; /* Yay */
+            display: flex; flex-direction: column;
+            justify-content: space-between;
             box-shadow: -5px 0 20px rgba(0,0,0,0.2); flex-shrink: 0;
-            overflow: hidden; /* Taşmayı engelle */
+            overflow: hidden; 
         }
         .panel-header { text-align: center; margin-bottom: 10px; flex-shrink: 0; }
         .panel-header h2 {
@@ -127,22 +127,22 @@
         }
         .counter { font-size: 0.9rem; color: #aaa; margin-left: 10px; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; }
         
-        /* ŞIKLAR (Esnek Grid Yapısı) */
+        /* ŞIKLAR (Esnek Grid) */
         .options-grid { 
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 Sütun */
-            grid-template-rows: 1fr 1fr;    /* 2 Satır (Eşit Yükseklik) */
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
             gap: 12px;
-            flex: 1; /* Kalan TÜM boşluğu doldur */
-            margin: 15px 0; /* Üstten ve alttan biraz boşluk */
-            min-height: 0; /* İçeriğin taşmasını engellemek için kritik */
+            flex: 1;
+            margin: 15px 0;
+            min-height: 0;
         }
         
         .option-btn {
-            width: 100%; height: 100%; /* Bulunduğu kutuyu tamamen kapla */
+            width: 100%; height: 100%;
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15);
             border-radius: 12px; color: #eee; font-family: 'Orbitron', sans-serif; 
-            font-size: 2.2rem; /* Font BÜYÜK */
+            font-size: 2.2rem;
             cursor: pointer; transition: 0.2s;
             display: flex; align-items: center; justify-content: center;
         }
@@ -153,9 +153,22 @@
         .signature { text-align: center; font-size: 0.75rem; color: #666; flex-shrink: 0; }
         .signature b { color: var(--brand-orange); } 
 
-        /* MOBİL UYUMLULUK */
+        /* ========================================= */
+        /* MOBİL DÜZELTME (FIX)                      */
+        /* ========================================= */
         @media (max-width: 900px) {
-            .main-container { flex-direction: column; padding: 10px; height: auto; overflow-y: auto; display: block; }
+            body {
+                overflow: auto; /* Sayfanın kendisi kayabilsin */
+                height: auto;
+                min-height: 100vh;
+            }
+            .main-container { 
+                flex-direction: column; 
+                padding: 10px; 
+                height: auto; 
+                overflow: visible; /* İçerik taşarsa göster */
+                display: flex;
+            }
             
             .sidebar { 
                 width: 100%; height: 70px; flex-direction: row; 
@@ -163,17 +176,30 @@
                 padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,0.1);
                 position: sticky; top: 0; background: var(--bg-dark); z-index: 20;
                 margin-bottom: 10px; gap: 10px;
+                flex-shrink: 0;
             }
             .q-nav-btn { width: 50px; height: 50px; margin: 0; font-size: 1rem; }
 
-            .stage-wrapper { height: 40vh; min-height: 250px; border-radius: 15px; margin-bottom: 15px; }
-            .nav-arrow { width: 40px; height: 40px; font-size: 1.2rem; }
+            .stage-wrapper { 
+                height: 40vh; 
+                min-height: 250px; 
+                border-radius: 15px; 
+                margin-bottom: 15px; 
+                flex-shrink: 0;
+            }
             
-            .right-panel { width: 100%; height: auto; padding-bottom: 30px; }
-            .panel-header h2 { font-size: 1.5rem; text-align: left; display: flex; justify-content: space-between; }
+            .right-panel { 
+                width: 100%; 
+                height: auto; 
+                padding-bottom: 30px; 
+                flex-shrink: 0;
+            }
             
-            /* Mobilde çok uzamaması için sabit yükseklik veriyoruz */
-            .options-grid { height: 250px; flex: none; } 
+            .options-grid { 
+                /* Mobilde butonlar ezilmesin, belirli bir boyutu korusun */
+                height: 220px; 
+                flex: none; /* Esnemeyi kapat, yüksekliği koru */
+            } 
             .option-btn { font-size: 1.8rem; }
             .logo .desc { display: none; }
         }
@@ -192,7 +218,9 @@
 
     <div class="main-container">
         
-        <div class="sidebar" id="sidebar"></div>
+        <div class="sidebar" id="sidebar">
+            <div style="color:#666; font-size:0.8rem; padding:10px; text-align:center;">Aranıyor...</div>
+        </div>
 
         <div class="stage-wrapper" id="stage">
             <button class="nav-arrow prev" onclick="changeQ(-1)">❮</button>
@@ -205,7 +233,7 @@
 
         <div class="right-panel">
             <div class="panel-header">
-                <h2>SORU <span id="q-idx">01</span> <span class="counter" id="q-total">/ 9</span></h2>
+                <h2>SORU <span id="q-idx">--</span> <span class="counter" id="q-total">/ --</span></h2>
             </div>
             
             <div class="options-grid">
@@ -221,34 +249,78 @@
 
     <script>
         // ============================================
-        // DOSYA İSİMLERİNİ BURAYA EKLE
+        // OTOMATİK SORU LİSTESİ (BOŞ BAŞLAR)
         // ============================================
-        const questions = [
-            "1B.jpg", 
-            "2C.jpg", 
-            "3D.jpg", 
-            "4A.jpg", 
-            "5C.jpg",
-            "6A.jpg",
-            "7B.jpg",
-            "8D.jpg",
-            "9C.jpg"
-        ];
-        // ============================================
-
+        let questions = [];
         let current = 0;
+        
+        // --- ÇİZİM DEĞİŞKENLERİ ---
         let isDrawingMode = false;
         let isDrawing = false;
         const canvas = document.getElementById('draw-canvas');
         const ctx = canvas.getContext('2d');
         let lastX = 0, lastY = 0;
 
-        function init() {
+        // ============================================
+        // OTOMATİK DOSYA TARAMA (AUTO-DETECT)
+        // ============================================
+        async function detectQuestions() {
+            const tempQuestions = [];
+            const suffixes = ['A', 'B', 'C', 'D'];
+            let qNumber = 1;
+            let found = true;
+
+            // Maksimum 50 soruya kadar tarar, bulunamazsa durur.
+            while (found && qNumber <= 50) {
+                found = false;
+                // Her soru numarası için A, B, C, D'yi dene
+                for (let char of suffixes) {
+                    const fileName = `${qNumber}${char}.jpg`;
+                    const exists = await imageExists(fileName);
+                    
+                    if (exists) {
+                        tempQuestions.push(fileName);
+                        found = true;
+                        break; // Bu numarayı bulduk, diğer harfleri denemeye gerek yok (1A bulduysak 1B'ye bakma, direk 2'ye geç)
+                    }
+                }
+                
+                // Eğer bu turda (mesela 4. soruda) hiçbir harf bulunamadıysa döngü biter.
+                if (found) {
+                    qNumber++;
+                }
+            }
+            
+            questions = tempQuestions;
+            finishInit();
+        }
+
+        function imageExists(url) {
+            return new Promise(resolve => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
+
+        function finishInit() {
+            if (questions.length === 0) {
+                document.getElementById('sidebar').innerHTML = '<div style="color:white; padding:10px; font-size:0.8rem">Soru Bulunamadı.<br>Dosya adlarını kontrol et: 1A.jpg, 2B.jpg...</div>';
+                document.getElementById('q-idx').innerText = "00";
+                document.getElementById('q-total').innerText = "/ 0";
+                return;
+            }
+
             renderSidebar();
-            setupCanvas();
             document.getElementById('q-total').innerText = "/ " + questions.length;
             load(0);
+        }
+
+        function init() {
+            setupCanvas();
             window.addEventListener('resize', resizeCanvas);
+            detectQuestions(); // Taramayı başlat
         }
 
         function renderSidebar() {
@@ -289,7 +361,7 @@
 
         function changeQ(dir) { load(current + dir); }
 
-        // --- Çizim Fonksiyonları ---
+        // --- ÇİZİM FONKSİYONLARI ---
         function setupCanvas() {
             canvas.addEventListener('mousedown', startD);
             canvas.addEventListener('mousemove', draw);
@@ -351,7 +423,7 @@
         function stopD() { isDrawing = false; }
         function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        // --- Cevap Kontrolü ---
+        // --- CEVAP KONTROLÜ ---
         function resetBtns() {
             document.querySelectorAll('.option-btn').forEach(b => {
                 b.className = 'option-btn'; b.style.pointerEvents = 'auto';
