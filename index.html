@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Z-Kitap: One Screen | Tolga Aydos</title>
+    <title>Z-Kitap: Pro Features | Tolga Aydos</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -25,12 +25,10 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             color: white;
-            /* KİLİT NOKTA: Ekran boyutuna sabitle, taşmayı engelle */
-            height: 100vh; height: 100dvh; 
+            height: 100vh; height: 100dvh;
             width: 100vw;
             display: flex; flex-direction: column;
-            overflow: hidden; /* ASLA SCROLL YOK */
-            user-select: none;
+            overflow: hidden; user-select: none;
         }
 
         /* HEADER */
@@ -45,7 +43,7 @@
         }
         .logo {
             font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1rem;
-            color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%;
+            color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 50%;
         }
         .logo span { color: var(--brand-orange); } 
         .logo .desc { font-weight: 400; color: #ccc; font-size: 0.8em; margin-left: 5px; }
@@ -59,21 +57,19 @@
         .toolbar button.active-tool {
             background: var(--brand-orange); color: #000; border-color: var(--brand-orange);
         }
+        /* Bitir Butonu (Özel Renk) */
+        #btn-finish { color: var(--neon-green); border-color: rgba(0, 230, 118, 0.3); }
 
         /* ANA KONTEYNER */
         .main-container {
-            display: flex; 
-            flex: 1; /* Header'dan kalan tüm alanı kapla */
-            padding: 20px; 
-            gap: 20px;
-            overflow: hidden; /* Taşmayı engelle */
-            height: calc(100vh - 60px);
+            display: flex; flex: 1; padding: 20px; gap: 20px;
+            height: calc(100vh - 60px); 
+            overflow: hidden; 
         }
 
-        /* --- SOL MENÜ --- */
+        /* SOL MENÜ */
         .sidebar {
-            width: 75px;
-            height: 100%; 
+            width: 75px; height: 100%; 
             display: flex; flex-direction: column; gap: 10px;
             overflow-y: auto; padding-right: 5px; flex-shrink: 0;
             padding-bottom: 50px;
@@ -83,28 +79,30 @@
         .sidebar::-webkit-scrollbar-thumb { background: var(--brand-orange); border-radius: 3px; }
 
         .q-nav-btn {
-            width: 55px; height: 55px;
-            margin: 0 auto;
+            width: 55px; height: 55px; margin: 0 auto;
             background: #1e222b; border: 1px solid var(--border-line);
             border-radius: 12px; color: var(--text-gray);
             font-family: 'Orbitron', sans-serif; font-weight: 600; font-size: 1.1rem;
-            cursor: pointer; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.2s;
+            cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s; position: relative;
         }
         .q-nav-btn.active {
             background: var(--brand-orange); color: #000;
             border-color: var(--brand-orange); transform: scale(1.05);
             box-shadow: 0 0 12px rgba(255, 159, 67, 0.4);
         }
+        /* Cevaplanan soru işareti */
+        .q-nav-btn.answered::after {
+            content: ''; position: absolute; bottom: 5px; right: 5px;
+            width: 8px; height: 8px; background: var(--neon-cyan); border-radius: 50%;
+        }
 
-        /* ORTA ALAN (GÖRSEL) */
+        /* ORTA ALAN */
         .stage-wrapper {
-            flex: 1; /* Mevcut boşluğu doldur */
-            background: #fff; border-radius: 15px;
+            flex: 1; background: #fff; border-radius: 15px;
             position: relative; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 0 30px rgba(0,0,0,0.5); overflow: hidden;
-            min-height: 0; /* Flex container içinde küçülebilmesi için şart */
+            min-height: 0;
         }
         .image-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
         .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; z-index: 1; }
@@ -119,15 +117,11 @@
         }
         .prev { left: 15px; } .next { right: 15px; }
 
-        /* --- SAĞ PANEL (ŞIKLAR) --- */
+        /* SAĞ PANEL */
         .right-panel {
-            width: 320px;
-            background: var(--panel-bg); border-radius: 20px;
-            padding: 20px;
-            display: flex; flex-direction: column;
-            justify-content: space-between;
-            box-shadow: -5px 0 20px rgba(0,0,0,0.2); flex-shrink: 0;
-            overflow: hidden; 
+            width: 320px; background: var(--panel-bg); border-radius: 20px;
+            padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2); flex-shrink: 0; overflow: hidden; 
         }
         .panel-header { text-align: center; margin-bottom: 10px; flex-shrink: 0; }
         .panel-header h2 {
@@ -135,22 +129,25 @@
         }
         .counter { font-size: 0.9rem; color: #aaa; margin-left: 10px; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; }
         
+        /* YENİ: KRONOMETRE GÖRÜNÜMÜ */
+        .timer-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem; color: #ffeb3b;
+            background: rgba(0,0,0,0.3); padding: 5px 15px;
+            border-radius: 8px; margin-top: 10px; display: inline-block;
+            border: 1px solid rgba(255, 235, 59, 0.2);
+        }
+
         .options-grid { 
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 12px;
-            flex: 1; /* Dikeyde kalan yeri doldur */
-            margin: 15px 0;
-            min-height: 0;
+            display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+            gap: 12px; flex: 1; margin: 15px 0; min-height: 0;
         }
         
         .option-btn {
             width: 100%; height: 100%;
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15);
             border-radius: 12px; color: #eee; font-family: 'Orbitron', sans-serif; 
-            font-size: 2.2rem;
-            cursor: pointer; transition: 0.2s;
+            font-size: 2.2rem; cursor: pointer; transition: 0.2s;
             display: flex; align-items: center; justify-content: center;
         }
         .option-btn:hover { background: rgba(255,255,255,0.06); }
@@ -160,60 +157,64 @@
         .signature { text-align: center; font-size: 0.75rem; color: #666; flex-shrink: 0; }
         .signature b { color: var(--brand-orange); } 
 
-        /* ========================================= */
-        /* MOBİL İÇİN TAM EKRAN (NO SCROLL) AYARI    */
-        /* ========================================= */
+        /* SONUÇ MODALI (KARNE) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+            z-index: 100; display: none; align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: #1e222b; border: 2px solid var(--neon-cyan);
+            border-radius: 20px; padding: 30px; text-align: center;
+            width: 90%; max-width: 400px;
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .modal-content h2 { color: white; margin-top: 0; font-size: 2rem; }
+        .stat-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;
+        }
+        .stat-box {
+            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;
+        }
+        .stat-val { font-size: 1.5rem; font-weight: bold; display: block; }
+        .stat-label { font-size: 0.8rem; color: #aaa; }
+        .stat-green { color: var(--neon-green); }
+        .stat-red { color: var(--neon-red); }
+        
+        .modal-btn {
+            background: var(--brand-orange); color: black; border: none;
+            padding: 12px 30px; font-size: 1.1rem; border-radius: 8px;
+            font-weight: bold; cursor: pointer; margin-top: 10px; font-family: 'Inter', sans-serif;
+        }
+
+        /* MOBİL UYUMLULUK */
         @media (max-width: 900px) {
             .main-container { 
-                flex-direction: column; /* Alt alta diz */
-                padding: 10px; 
-                gap: 10px;
-                /* Header düşünce kalan alan */
+                flex-direction: column; padding: 10px; gap: 10px;
                 height: calc(100vh - 60px); 
             }
-            
-            /* Üstteki Soru Numaraları */
             .sidebar { 
-                width: 100%; height: 60px; /* Sabit yükseklik */
-                flex-direction: row; 
+                width: 100%; height: 60px; flex-direction: row; 
                 overflow-x: auto; overflow-y: hidden;
                 padding: 5px; border: none; background: transparent;
-                flex-shrink: 0; /* Küçülmesine izin verme */
-                margin: 0;
-                gap: 8px;
+                flex-shrink: 0; margin: 0; gap: 8px;
             }
             .q-nav-btn { width: 45px; height: 45px; margin: 0; font-size: 0.9rem; }
-
-            /* ORTA ALAN: En önemli kısım */
-            .stage-wrapper { 
-                flex: 1; /* Kalan TÜM boşluğu burası alsın */
-                min-height: 0; /* İçerik büyük olsa bile taşma, küçül */
-                margin: 0;
-                border-radius: 10px;
-            }
+            .stage-wrapper { flex: 1; min-height: 0; margin: 0; border-radius: 10px; }
             .nav-arrow { width: 35px; height: 35px; font-size: 1rem; opacity: 0.7; }
-            
-            /* ALT PANEL: Şıklar */
             .right-panel { 
-                width: 100%; 
-                height: auto; /* İçeriğe göre yükseklik */
-                padding: 10px;
-                flex-shrink: 0; /* Küçülüp kaybolmasın */
-                background: var(--panel-bg);
+                width: 100%; height: auto; padding: 10px; padding-bottom: 40px; 
+                flex-shrink: 0; background: var(--panel-bg);
             }
-            
-            .panel-header h2 { font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
-            .counter { font-size: 0.8rem; padding: 2px 6px; }
+            .panel-header { 
+                display: flex; justify-content: space-between; align-items: center; 
+            }
+            .panel-header h2 { font-size: 1.2rem; margin: 0; }
+            .timer-display { margin: 0; font-size: 1rem; padding: 3px 8px; }
 
-            /* Butonlar mobilde yan yana sıkışık dursun, çok yer kaplamasın */
-            .options-grid { 
-                margin: 10px 0 5px 0;
-                gap: 8px;
-                height: 110px; /* Mobilde buton alanına sabit yükseklik ver ki görseli ezmesin */
-                flex: none; /* Esnemeyi iptal et, sabit kalsın */
-            } 
+            .options-grid { margin: 10px 0 5px 0; gap: 8px; height: 110px; flex: none; } 
             .option-btn { font-size: 1.5rem; }
-            
             .logo .desc { display: none; }
             .signature { font-size: 0.65rem; margin-top: 5px; }
         }
@@ -224,6 +225,7 @@
     <header>
         <div class="logo">tolga<span>aydos</span>.com <span class="desc">Fen Bilimleri Platformu</span></div>
         <div class="toolbar">
+            <button id="btn-finish" onclick="finishTest()" title="Testi Bitir">🏁</button>
             <button id="btn-draw" onclick="toggleDrawing()" title="Kalem">✎</button>
             <button id="btn-erase" onclick="clearCanvas()" title="Temizle">⌫</button>
             <button onclick="toggleFS()" title="Tam Ekran">⛶</button>
@@ -248,6 +250,7 @@
         <div class="right-panel">
             <div class="panel-header">
                 <h2>SORU <span id="q-idx">--</span> <span class="counter" id="q-total">/ --</span></h2>
+                <div class="timer-display" id="timer">00:00</div>
             </div>
             
             <div class="options-grid">
@@ -261,10 +264,32 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="result-modal">
+        <div class="modal-content">
+            <h2>TEST BİTTİ</h2>
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <span class="stat-val stat-green" id="res-correct">0</span>
+                    <span class="stat-label">Doğru</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-val stat-red" id="res-wrong">0</span>
+                    <span class="stat-label">Yanlış</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-val" style="color:#fff" id="res-empty">0</span>
+                    <span class="stat-label">Boş</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-val" style="color:#ffeb3b" id="res-time">00:00</span>
+                    <span class="stat-label">Süre</span>
+                </div>
+            </div>
+            <button class="modal-btn" onclick="closeModal()">KAPAT</button>
+        </div>
+    </div>
+
     <script>
-        // ============================================
-        // DEĞİŞKENLER
-        // ============================================
         let questions = [];
         let current = 0;
         let isDrawingMode = false;
@@ -273,9 +298,11 @@
         const ctx = canvas.getContext('2d');
         let lastX = 0, lastY = 0;
 
-        // ============================================
-        // OTOMATİK DOSYA TARAMA (AUTO-DETECT)
-        // ============================================
+        // --- İSTATİSTİK DEĞİŞKENLERİ ---
+        let userAnswers = {}; // {0: 'true', 1: 'false', 2: null} gibi
+        let timerInterval;
+        let seconds = 0;
+
         async function detectQuestions() {
             const tempQuestions = [];
             const suffixes = ['A', 'B', 'C', 'D'];
@@ -287,19 +314,14 @@
                 for (let char of suffixes) {
                     const fileName = `${qNumber}${char}.jpg`;
                     const exists = await imageExists(fileName);
-                    
                     if (exists) {
                         tempQuestions.push(fileName);
                         found = true;
                         break; 
                     }
                 }
-                
-                if (found) {
-                    qNumber++;
-                }
+                if (found) qNumber++;
             }
-            
             questions = tempQuestions;
             finishInit();
         }
@@ -315,15 +337,13 @@
 
         function finishInit() {
             if (questions.length === 0) {
-                document.getElementById('sidebar').innerHTML = '<div style="color:white; padding:10px; font-size:0.8rem">Soru yok.<br>Örn: 1A.jpg</div>';
-                document.getElementById('q-idx').innerText = "00";
-                document.getElementById('q-total').innerText = "/ 0";
+                document.getElementById('sidebar').innerHTML = '<div style="color:white; padding:10px;">Soru yok.</div>';
                 return;
             }
-
             renderSidebar();
             document.getElementById('q-total').innerText = "/ " + questions.length;
             load(0);
+            startTimer(); // Sayacı Başlat
         }
 
         function init() {
@@ -332,12 +352,29 @@
             detectQuestions();
         }
 
+        // --- KRONOMETRE ---
+        function startTimer() {
+            clearInterval(timerInterval);
+            seconds = 0;
+            timerInterval = setInterval(() => {
+                seconds++;
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('timer').innerText = `${m}:${s}`;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
         function renderSidebar() {
             const sb = document.getElementById('sidebar');
             sb.innerHTML = '';
             questions.forEach((_, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'q-nav-btn';
+                btn.id = 'nav-btn-' + i; // ID ekledik
                 btn.textContent = i + 1;
                 btn.onclick = () => load(i);
                 sb.appendChild(btn);
@@ -363,95 +400,139 @@
                     if(isActive) b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
                 });
 
-                resetBtns();
+                // Önceki cevabı hatırla veya butonları sıfırla
+                updateOptionButtonsState();
+                
                 img.onload = () => { img.style.opacity = 1; resizeCanvas(); };
             }, 100);
         }
 
         function changeQ(dir) { load(current + dir); }
 
-        // --- ÇİZİM ---
         function setupCanvas() {
-            canvas.addEventListener('mousedown', startD);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopD);
-            canvas.addEventListener('mouseout', stopD);
+            canvas.addEventListener('mousedown', startD); canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopD); canvas.addEventListener('mouseout', stopD);
             canvas.addEventListener('touchstart', (e) => {
-                const t = e.touches[0];
-                canvas.dispatchEvent(new MouseEvent('mousedown', { clientX: t.clientX, clientY: t.clientY }));
+                const t = e.touches[0]; canvas.dispatchEvent(new MouseEvent('mousedown', { clientX: t.clientX, clientY: t.clientY }));
             });
             canvas.addEventListener('touchmove', (e) => {
-                const t = e.touches[0];
-                canvas.dispatchEvent(new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY }));
+                const t = e.touches[0]; canvas.dispatchEvent(new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY }));
             });
             canvas.addEventListener('touchend', () => canvas.dispatchEvent(new MouseEvent('mouseup', {})));
             resizeCanvas();
         }
-
         function resizeCanvas() {
             const container = document.querySelector('.image-container');
             if(container) {
-                canvas.width = container.offsetWidth;
-                canvas.height = container.offsetHeight;
+                canvas.width = container.offsetWidth; canvas.height = container.offsetHeight;
                 ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = '#e74c3c';
             }
         }
-
         function toggleDrawing() {
             isDrawingMode = !isDrawingMode;
             const btn = document.getElementById('btn-draw');
             const stage = document.getElementById('stage');
             if(isDrawingMode) {
-                btn.classList.add('active-tool');
-                canvas.style.pointerEvents = 'auto';
-                stage.style.cursor = 'crosshair';
+                btn.classList.add('active-tool'); canvas.style.pointerEvents = 'auto'; stage.style.cursor = 'crosshair';
             } else {
-                btn.classList.remove('active-tool');
-                canvas.style.pointerEvents = 'none';
-                stage.style.cursor = 'default';
+                btn.classList.remove('active-tool'); canvas.style.pointerEvents = 'none'; stage.style.cursor = 'default';
             }
         }
-
         function startD(e) {
-            if(!isDrawingMode) return;
-            isDrawing = true;
-            const rect = canvas.getBoundingClientRect();
-            lastX = e.clientX - rect.left;
-            lastY = e.clientY - rect.top;
+            if(!isDrawingMode) return; isDrawing = true;
+            const rect = canvas.getBoundingClientRect(); lastX = e.clientX - rect.left; lastY = e.clientY - rect.top;
         }
-
         function draw(e) {
             if(!isDrawing || !isDrawingMode) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
-            [lastX, lastY] = [x, y];
+            const rect = canvas.getBoundingClientRect(); const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+            ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke(); [lastX, lastY] = [x, y];
         }
-
         function stopD() { isDrawing = false; }
         function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        // --- CEVAP KONTROL ---
-        function resetBtns() {
-            document.querySelectorAll('.option-btn').forEach(b => {
-                b.className = 'option-btn'; b.style.pointerEvents = 'auto';
-            });
-        }
-
+        // --- CEVAP KONTROL (Gelişmiş) ---
         function check(btn, choice) {
+            // Eğer bu soru zaten çözüldüyse tekrar çözdürme (İsteğe bağlı, şu an izin veriyoruz ama son cevabı kaydediyoruz)
             const fileName = questions[current];
             const match = fileName.match(/(\d+)([A-D])/i);
             if(!match) return;
             const correct = match[2].toUpperCase();
+
+            // Tüm butonları pasif yap
             document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
-            if(choice === correct) btn.classList.add('correct');
-            else {
+
+            // Kaydet
+            let isCorrect = false;
+            if(choice === correct) {
+                btn.classList.add('correct');
+                isCorrect = true;
+            } else {
                 btn.classList.add('wrong');
                 document.querySelectorAll('.option-btn').forEach(b => {
                     if(b.textContent === correct) b.classList.add('correct');
                 });
             }
+
+            // Durumu sakla
+            userAnswers[current] = isCorrect; // true/false
+            
+            // Sol menüde işaretle
+            document.getElementById('nav-btn-' + current).classList.add('answered');
+        }
+
+        // Soru yüklendiğinde butonların durumunu geri getir
+        function updateOptionButtonsState() {
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => {
+                b.className = 'option-btn'; // Sıfırla
+                b.style.pointerEvents = 'auto'; // Aç
+            });
+
+            // Eğer bu soru daha önce çözüldüyse, cevabı göstermeyelim (Test mantığı).
+            // Sadece o anki tıklama gösterilir. Yeni soruya geçince temizlenir.
+            // Ancak, kullanıcı geri döndüğünde eski cevabını görmek isterse buraya logic eklenebilir.
+            // Şu anki versiyonda: Sayfa değişince cevap görseli sıfırlanıyor, ama 'userAnswers' arka planda tutuluyor.
+            
+            // Eğer daha önce çözüldüyse butonları kilitlemek istersek:
+            if(userAnswers.hasOwnProperty(current)) {
+                const fileName = questions[current];
+                const match = fileName.match(/(\d+)([A-D])/i);
+                if(match) {
+                    const correct = match[2].toUpperCase();
+                    btns.forEach(b => {
+                        b.style.pointerEvents = 'none'; // Tekrar tıklanamaz
+                        if(b.textContent === correct) b.classList.add('correct');
+                        // Yanlış cevabı bulmak zor çünkü hangisine tıkladığını kaydetmedik, sadece doğru/yanlış kaydettik.
+                        // Basitlik için sadece doğruyu gösteriyoruz çözüldüyse.
+                    });
+                }
+            }
+        }
+
+        // --- SONUÇ EKRANI ---
+        function finishTest() {
+            stopTimer();
+            let correctCount = 0;
+            let wrongCount = 0;
+            let emptyCount = 0;
+
+            for(let i=0; i<questions.length; i++) {
+                if(userAnswers[i] === true) correctCount++;
+                else if(userAnswers[i] === false) wrongCount++;
+                else emptyCount++;
+            }
+
+            document.getElementById('res-correct').innerText = correctCount;
+            document.getElementById('res-wrong').innerText = wrongCount;
+            document.getElementById('res-empty').innerText = emptyCount;
+            document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
+
+            document.getElementById('result-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('result-modal').style.display = 'none';
+            // İstersek burada oyunu sıfırlayabiliriz veya kullanıcı incelemeye devam eder.
         }
 
         function toggleFS() {
