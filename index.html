@@ -26,10 +26,12 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             color: white;
+            /* KRİTİK DÜZELTME: dvh (Dynamic Viewport Height) */
             height: 100vh;
+            height: 100dvh; 
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: hidden; /* Ana sayfa kaymasın, içerik kaysın */
         }
 
         /* --- HEADER --- */
@@ -40,7 +42,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 15px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             z-index: 50;
             flex-shrink: 0;
@@ -49,55 +51,47 @@
         .logo {
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
-            font-size: 1.1rem; /* Fontu biraz küçülttük ki uzun yazı sığsın */
+            font-size: 1rem;
             letter-spacing: 0.5px;
             color: #fff;
-            white-space: nowrap; /* Alt satıra inmesin */
-            overflow: hidden;    /* Taşarsa gizle */
-            text-overflow: ellipsis; /* Taşarsa üç nokta (...) koy */
-            max-width: 75%; /* Butonlara yer kalsın */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70%;
+            line-height: 1.2;
         }
         
-        .logo span { color: var(--brand-orange); } /* 'aydos' Turuncu */
+        .logo span { color: var(--brand-orange); } 
         
-        /* Ekstra açıklama kısmı için daha ince font */
         .logo .desc {
             font-weight: 400;
             color: #ccc;
+            font-size: 0.85em;
+            display: inline-block;
             margin-left: 5px;
-            font-size: 0.9em;
         }
 
-        .toolbar {
-            display: flex;
-            flex-shrink: 0; /* Butonlar sıkışmasın */
-        }
-
+        .toolbar { display: flex; flex-shrink: 0; }
         .toolbar button {
             background: rgba(255,255,255,0.05);
             border: 1px solid var(--border-line);
             color: #ccc;
-            width: 36px; height: 36px;
+            width: 34px; height: 34px;
             border-radius: 6px;
             margin-left: 5px;
             cursor: pointer;
             transition: 0.3s;
             font-size: 1rem;
         }
-        .toolbar button:hover {
-            background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 10px var(--neon-cyan);
-        }
 
         /* --- ANA YAPI --- */
         .main-container {
             display: flex;
             flex: 1;
-            height: calc(100vh - 60px);
             padding: 20px;
             gap: 20px;
-            overflow: hidden;
+            overflow: hidden; /* Masaüstünde kaydırma yok */
+            position: relative;
         }
 
         /* --- SOL MENÜ --- */
@@ -127,11 +121,8 @@
             flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
         }
-
-        .q-nav-btn:hover { border-color: var(--neon-cyan); color: #fff; }
         .q-nav-btn.active {
-            background: var(--brand-orange);
-            color: #000;
+            background: var(--brand-orange); color: #000;
             border-color: var(--brand-orange);
             box-shadow: 0 0 10px rgba(255, 159, 67, 0.4);
             transform: scale(1.1);
@@ -149,11 +140,7 @@
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
             overflow: hidden;
         }
-
-        .image-container {
-            width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center; padding: 20px;
-        }
+        .image-container { width: 100%; height: 100%; padding: 20px; display: flex; align-items: center; justify-content: center; }
         .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
         .nav-arrow {
@@ -161,8 +148,7 @@
             width: 40px; height: 40px; border-radius: 50%;
             background: rgba(240, 240, 240, 0.9); border: 1px solid #ccc;
             color: #333; font-size: 1.2rem; cursor: pointer; z-index: 10;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
         }
         .prev { left: 10px; }
         .next { right: 10px; }
@@ -180,7 +166,6 @@
             border: 1px solid rgba(255,255,255,0.05);
             flex-shrink: 0;
         }
-
         .panel-header { text-align: center; margin-bottom: 15px; }
         .panel-header h2 {
             font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 2rem;
@@ -190,7 +175,6 @@
         .panel-header p { margin: 5px 0 0; font-size: 0.8rem; color: var(--text-gray); }
 
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; }
-
         .option-btn {
             background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.15);
@@ -202,36 +186,80 @@
             display: flex; align-items: center; justify-content: center;
             transition: 0.2s;
         }
-        .option-btn:active { transform: scale(0.95); }
         .option-btn.correct { border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 15px rgba(0, 230, 118, 0.4); }
         .option-btn.wrong { border-color: var(--neon-red); color: var(--neon-red); box-shadow: 0 0 15px rgba(255, 59, 48, 0.4); }
 
         .signature { text-align: center; font-size: 0.7rem; color: #555; margin-top: 15px; font-family: 'Inter', sans-serif; }
         .signature b { color: var(--brand-orange); }
 
-        /* --- MOBILE RESPONSIVE --- */
+        /* --- MOBILE RESPONSIVE (ALT TARAF DÜZELTMESİ) --- */
         @media (max-width: 900px) {
-            .main-container { flex-direction: column; padding: 10px; gap: 10px; }
-            .sidebar { width: 100%; height: 60px; flex-direction: row; order: 1; overflow-x: auto; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; }
+            .main-container { 
+                flex-direction: column; 
+                padding: 10px; 
+                gap: 10px;
+                /* KRİTİK: Mobilde içeriğin sığması için scroll açtık */
+                overflow-y: auto; 
+                display: block; /* Flex yerine block yaparak akışı serbest bıraktık */
+            }
+
+            /* Sidebar (Üst Şerit) */
+            .sidebar { 
+                width: 100%; 
+                height: 55px; 
+                flex-direction: row; 
+                overflow-x: auto; 
+                padding: 5px 0; 
+                border-bottom: 1px solid rgba(255,255,255,0.05); 
+                align-items: center;
+                /* Yapışkan menü */
+                position: sticky;
+                top: 0;
+                background: var(--bg-dark);
+                z-index: 20;
+                margin-bottom: 10px;
+            }
             .q-nav-btn { width: 45px; height: 45px; margin: 0 6px; font-size: 0.9rem; }
             
-            .stage-wrapper { order: 2; width: 100%; height: 40vh; border-radius: 12px; }
-            .nav-arrow { width: 35px; height: 35px; font-size: 1rem; opacity: 0.7; }
+            /* Resim Alanı */
+            .stage-wrapper { 
+                width: 100%; 
+                /* Ekranın yarısından az olsun ki butonlara yer kalsın */
+                height: 38vh; 
+                min-height: 250px;
+                border-radius: 12px;
+                margin-bottom: 10px;
+            }
+            .nav-arrow { width: 35px; height: 35px; font-size: 1rem; opacity: 0.8; }
             
-            .right-panel { order: 3; width: 100%; flex: 1; border-radius: 15px; padding: 15px; box-shadow: none; background: rgba(22, 27, 34, 0.95); }
-            .panel-header { margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-            .panel-header h2 { font-size: 1.5rem; text-align: left; }
-            .panel-header p { display: none; }
-            .options-grid { gap: 10px; }
-            .option-btn { font-size: 1.8rem; border-radius: 10px; }
-            .signature { margin-top: 10px; font-size: 0.65rem; }
-            
-            /* Logo Mobilde çok uzun olduğu için fontu küçültüyoruz */
-            .logo { font-size: 0.8rem; }
-        }
+            /* Kontrol Paneli (Alt Kısım) */
+            .right-panel { 
+                width: 100%; 
+                height: auto; /* Sabit yükseklik değil, içeriğe göre */
+                min-height: 220px;
+                border-radius: 15px; 
+                padding: 15px; 
+                box-shadow: none; 
+                background: rgba(22, 27, 34, 0.95);
+                /* En alttan boşluk bırakalım ki telefon barına denk gelmesin */
+                padding-bottom: 30px; 
+            }
 
-        @media (max-height: 700px) and (max-width: 500px) {
-            .stage-wrapper { height: 35vh; }
+            .panel-header { margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+            .panel-header h2 { font-size: 1.4rem; text-align: left; }
+            .panel-header p { display: none; }
+            
+            .options-grid { 
+                gap: 10px; 
+                /* Buton yüksekliği */
+                height: 120px; 
+            }
+            .option-btn { font-size: 1.6rem; border-radius: 10px; }
+            
+            .signature { margin-top: 15px; font-size: 0.65rem; }
+            
+            /* Logo Mobilde Düzenleme */
+            .logo .desc { display: none; } /* Mobilde çok uzun yazıyı gizle, sığmıyor */
         }
     </style>
 </head>
