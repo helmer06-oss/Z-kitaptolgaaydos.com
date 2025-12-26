@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z-Kitap: Cyber UI | Tolga Aydos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* --- RENK PALETİ (Görselden Alınanlar) --- */
+            --bg-dark: #0f1115;       /* En arka plan */
+            --panel-bg: #161b22;      /* Panel içi */
+            
+            --neon-cyan: #00f2ff;     /* Başlık Rengi (SORU 2) */
+            --neon-green: #00e676;    /* Doğru Cevap / C şıkkı glow */
+            --neon-red: #ff3b30;      /* Yanlış Cevap / B şıkkı glow */
+            --brand-orange: #ff9f43;  /* İmza Rengi */
+            
+            --text-gray: #7f8c8d;     /* Pasif yazılar */
+            --border-line: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif; /* Gövde metni */
+            background-color: var(--bg-dark);
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            height: 60px;
+            background: var(--panel-bg);
+            border-bottom: 1px solid var(--border-line);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            z-index: 50;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+        .logo span { color: var(--brand-orange); }
+
+        .toolbar button {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-line);
+            color: #ccc;
+            width: 38px; height: 38px;
+            border-radius: 6px;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .toolbar button:hover {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* --- ANA YAPI --- */
+        .main-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 60px);
+            padding: 20px;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+
+        /* --- SOL MENÜ --- */
+        .sidebar {
+            width: 70px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        /* Scrollbar gizleme */
+        .sidebar::-webkit-scrollbar { width: 0; }
+
+        .q-nav-btn {
+            width: 50px; height: 50px;
+            margin: 0 auto;
+            background: #1e222b;
+            border: 1px solid var(--border-line);
+            border-radius: 8px;
+            color: var(--text-gray);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .q-nav-btn:hover {
+            border-color: var(--neon-cyan);
+            color: #fff;
+        }
+
+        .q-nav-btn.active {
+            background: var(--brand-orange);
+            color: #000;
+            border-color: var(--brand-orange);
+            box-shadow: 0 0 15px rgba(255, 159, 67, 0.5);
+            transform: scale(1.1);
+        }
+
+        /* --- ORTA ALAN: BEYAZ SAHNE --- */
+        .stage-wrapper {
+            flex: 1;
+            background-color: #ffffff; /* BEYAZ KAĞIT */
+            border-radius: 15px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Nav Okları */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            color: #333;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+        .nav-arrow:hover { background: #333; color: #fff; }
+        .prev { left: 15px; }
+        .next { right: 15px; }
+
+        /* --- SAĞ PANEL (GÖRSELDEKİ FORMAT) --- */
+        .right-panel {
+            width: 320px;
+            background: var(--panel-bg);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Header üstte, Grid ortada, Footer altta */
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Panel Başlığı - Görseldeki gibi */
+        .panel-header {
+            text-align: center;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .panel-header h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 2.2rem;
+            color: var(--neon-cyan); /* O Mavi renk */
+            margin: 0;
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.3); /* Neon glow */
+            letter-spacing: 2px;
+        }
+
+        .panel-header p {
+            margin: 8px 0 0;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Seçenekler Izgarası - Görseldeki 2x2 Kare Yapı */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            aspect-ratio: 1; /* Tam kare olması için */
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            color: #ecf0f1;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .option-btn:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.5);
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
+        }
+
+        /* --- DOĞRU / YANLIŞ NEON EFEKTLERİ --- */
+        
+        /* Yanlış Cevap (Kırmızı Glow - Görseldeki B şıkkı gibi) */
+        .option-btn.wrong {
+            border-color: var(--neon-red);
+            color: var(--neon-red);
+            box-shadow: 0 0 20px rgba(255, 59, 48, 0.4), inset 0 0 10px rgba(255, 59, 48, 0.1);
+            text-shadow: 0 0 10px var(--neon-red);
+        }
+
+        /* Doğru Cevap (Yeşil Glow - Görseldeki C şıkkı gibi) */
+        .option-btn.correct {
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.4), inset 0 0 10px rgba(0, 230, 118, 0.1);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        /* İmza - Görseldeki gibi */
+        .signature {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: auto;
+            padding-top: 10px;
+            font-family: 'Inter', sans-serif;
+        }
+        .signature b {
+            color: var(--brand-orange); /* Turuncu */
+            font-weight: 600;
+        }
+
+        /* Mobil Uyumluluk */
+        @media (max-width: 900px) {
+            .main-container { flex-direction: column; padding: 10px; }
+            .sidebar { flex-direction: row; width: 100%; height: 60px; order: 2; padding: 0 10px; align-items: center; overflow-x: auto; }
+            .stage-wrapper { height: 40vh; order: 1; }
+            .right-panel { width: auto; order: 3; padding: 20px; }
+            .options-grid { gap: 10px; }
+            .option-btn { font-size: 2rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">tolga<span>aydos</span>.com</div>
+        <div class="toolbar">
+            <button title="Kalem">✎</button>
+            <button title="Silgi">⌫</button>
+            <button onclick="toggleFS()" title="Tam Ekran">⛶</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        
+        <div class="sidebar" id="sidebar"></div>
+
+        <div class="stage-wrapper">
+            <button class="nav-arrow prev" onclick="changeQ(-1)">❮</button>
+            <div class="image-container">
+                <img id="q-img" src="" alt="Soru">
+            </div>
+            <button class="nav-arrow next" onclick="changeQ(1)">❯</button>
+        </div>
+
+        <div class="right-panel">
+            
+            <div class="panel-header">
+                <h2 id="q-title">SORU 01</h2>
+                <p>Doğru seçeneği işaretleyiniz</p>
+            </div>
+
+            <div class="options-grid">
+                <button class="option-btn" onclick="check(this, 'A')">A</button>
+                <button class="option-btn" onclick="check(this, 'B')">B</button>
+                <button class="option-btn" onclick="check(this, 'C')">C</button>
+                <button class="option-btn" onclick="check(this, 'D')">D</button>
+            </div>
+
+            <div class="signature">
+                Designed by <b>tolgaaydos.com</b>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Soru Dosyaları
+        const questions = [
+            "1B.jpg", 
+            "2C.jpg", 
+            "3D.jpg", 
+            "4A.jpg", 
+            "5C.jpg"
+        ];
+
+        let current = 0;
+
+        function init() {
+            renderSidebar();
+            load(0);
+        }
+
+        function renderSidebar() {
+            const sb = document.getElementById('sidebar');
+            sb.innerHTML = '';
+            questions.forEach((_, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'q-nav-btn';
+                btn.textContent = i + 1;
+                btn.onclick = () => load(i);
+                sb.appendChild(btn);
+            });
+        }
+
+        function load(idx) {
+            if(idx < 0 || idx >= questions.length) return;
+            current = idx;
+
+            // Görseli yükle
+            const img = document.getElementById('q-img');
+            img.style.opacity = 0;
+            
+            setTimeout(() => {
+                img.src = questions[idx];
+                
+                // Başlığı "SORU X" formatında güncelle (Orbitron fontuyla)
+                // Numarayı her zaman 2 hane yap (01, 02 gibi)
+                const qNum = (idx + 1).toString();
+                document.getElementById('q-title').innerText = "SORU " + qNum;
+                
+                // Sidebar Aktifliği
+                document.querySelectorAll('.q-nav-btn').forEach((b, i) => {
+                    b.classList.toggle('active', i === idx);
+                });
+
+                // Butonları resetle
+                resetBtns();
+
+                img.onload = () => img.style.opacity = 1;
+            }, 150);
+        }
+
+        function changeQ(dir) {
+            load(current + dir);
+        }
+
+        function resetBtns() {
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => {
+                b.className = 'option-btn'; // class'ı temizle
+                b.style.pointerEvents = 'auto'; // tıklanabilir yap
+            });
+        }
+
+        function check(btn, choice) {
+            const fileName = questions[current];
+            const match = fileName.match(/(\d+)([A-D])/i);
+            
+            if(!match) { 
+                console.log("Dosya isminde cevap yok, varsayılan A kabul ediliyor."); 
+            }
+            
+            const correct = match ? match[2].toUpperCase() : 'A';
+
+            // Tüm butonları kilitle
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.style.pointerEvents = 'none');
+
+            if(choice === correct) {
+                // Doğru bildi: Sadece yeşil yak
+                btn.classList.add('correct');
+            } else {
+                // Yanlış bildi: Kırmızı yak
+                btn.classList.add('wrong');
+                
+                // Doğru olanı bul ve yeşil yak
+                allBtns.forEach(b => {
+                    if(b.textContent === correct) b.classList.add('correct');
+                });
+            }
+        }
+
+        function toggleFS() {
+            if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if(document.exitFullscreen) document.exitFullscreen();
+        }
+
+        init();
+    </script>
+</body>
+</html>
