@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Z-Kitap: Mobile Pro | Tolga Aydos</title>
+    <title>Z-Kitap: Full Fit | Tolga Aydos</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -21,258 +21,171 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             color: white;
-            /* KRİTİK DÜZELTME: dvh (Dynamic Viewport Height) */
-            height: 100vh;
-            height: 100dvh; 
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; /* Ana sayfa kaymasın, içerik kaysın */
+            height: 100vh; height: 100dvh;
+            display: flex; flex-direction: column;
+            overflow: hidden; user-select: none;
         }
 
-        /* --- HEADER --- */
+        /* HEADER */
         header {
             height: 60px;
             background: var(--panel-bg);
             border-bottom: 1px solid var(--border-line);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             padding: 0 15px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            z-index: 50;
-            flex-shrink: 0;
+            z-index: 50; flex-shrink: 0;
         }
-
         .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            letter-spacing: 0.5px;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 70%;
-            line-height: 1.2;
+            font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1rem;
+            color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%;
         }
-        
         .logo span { color: var(--brand-orange); } 
-        
-        .logo .desc {
-            font-weight: 400;
-            color: #ccc;
-            font-size: 0.85em;
-            display: inline-block;
-            margin-left: 5px;
-        }
+        .logo .desc { font-weight: 400; color: #ccc; font-size: 0.8em; margin-left: 5px; }
 
-        .toolbar { display: flex; flex-shrink: 0; }
+        .toolbar { display: flex; gap: 5px; }
         .toolbar button {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border-line);
-            color: #ccc;
-            width: 34px; height: 34px;
-            border-radius: 6px;
-            margin-left: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 1rem;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-line);
+            color: #ccc; width: 38px; height: 38px; border-radius: 6px;
+            cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+        }
+        .toolbar button.active-tool {
+            background: var(--brand-orange); color: #000; border-color: var(--brand-orange);
         }
 
-        /* --- ANA YAPI --- */
+        /* ANA KONTEYNER */
         .main-container {
-            display: flex;
-            flex: 1;
-            padding: 20px;
-            gap: 20px;
-            overflow: hidden; /* Masaüstünde kaydırma yok */
-            position: relative;
+            display: flex; flex: 1; padding: 20px; gap: 20px;
+            height: calc(100vh - 60px); 
+            overflow: hidden; 
         }
 
         /* --- SOL MENÜ --- */
         .sidebar {
-            width: 70px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-            padding-right: 5px;
-            flex-shrink: 0;
+            width: 75px;
+            height: 100%; 
+            display: flex; flex-direction: column; gap: 10px;
+            overflow-y: auto; padding-right: 5px; flex-shrink: 0;
+            padding-bottom: 50px;
         }
-        .sidebar::-webkit-scrollbar { width: 0; }
+        .sidebar::-webkit-scrollbar { width: 5px; }
+        .sidebar::-webkit-scrollbar-track { background: #161b22; border-radius: 3px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--brand-orange); border-radius: 3px; }
 
         .q-nav-btn {
-            width: 50px; height: 50px;
+            width: 55px; height: 55px;
             margin: 0 auto;
-            background: #1e222b;
-            border: 1px solid var(--border-line);
-            border-radius: 8px;
-            color: var(--text-gray);
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .q-nav-btn.active {
-            background: var(--brand-orange); color: #000;
-            border-color: var(--brand-orange);
-            box-shadow: 0 0 10px rgba(255, 159, 67, 0.4);
-            transform: scale(1.1);
-        }
-
-        /* --- ORTA ALAN --- */
-        .stage-wrapper {
-            flex: 1;
-            background-color: #ffffff;
-            border-radius: 15px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
-        .image-container { width: 100%; height: 100%; padding: 20px; display: flex; align-items: center; justify-content: center; }
-        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
-
-        .nav-arrow {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            width: 40px; height: 40px; border-radius: 50%;
-            background: rgba(240, 240, 240, 0.9); border: 1px solid #ccc;
-            color: #333; font-size: 1.2rem; cursor: pointer; z-index: 10;
-            display: flex; align-items: center; justify-content: center; transition: 0.3s;
-        }
-        .prev { left: 10px; }
-        .next { right: 10px; }
-
-        /* --- SAĞ PANEL --- */
-        .right-panel {
-            width: 320px;
-            background: var(--panel-bg);
-            border-radius: 20px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: -5px 0 20px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.05);
-            flex-shrink: 0;
-        }
-        .panel-header { text-align: center; margin-bottom: 15px; }
-        .panel-header h2 {
-            font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 2rem;
-            color: var(--neon-cyan); margin: 0;
-            text-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
-        }
-        .panel-header p { margin: 5px 0 0; font-size: 0.8rem; color: var(--text-gray); }
-
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex: 1; }
-        .option-btn {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 12px;
-            color: #ecf0f1;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            cursor: pointer;
+            background: #1e222b; border: 1px solid var(--border-line);
+            border-radius: 12px; color: var(--text-gray);
+            font-family: 'Orbitron', sans-serif; font-weight: 600; font-size: 1.1rem;
+            cursor: pointer; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center;
             transition: 0.2s;
         }
-        .option-btn.correct { border-color: var(--neon-green); color: var(--neon-green); box-shadow: 0 0 15px rgba(0, 230, 118, 0.4); }
-        .option-btn.wrong { border-color: var(--neon-red); color: var(--neon-red); box-shadow: 0 0 15px rgba(255, 59, 48, 0.4); }
+        .q-nav-btn.active {
+            background: var(--brand-orange); color: #000;
+            border-color: var(--brand-orange); transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(255, 159, 67, 0.4);
+        }
 
-        .signature { text-align: center; font-size: 0.7rem; color: #555; margin-top: 15px; font-family: 'Inter', sans-serif; }
-        .signature b { color: var(--brand-orange); }
+        /* ORTA ALAN */
+        .stage-wrapper {
+            flex: 1; background: #fff; border-radius: 15px;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); overflow: hidden;
+        }
+        .image-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; z-index: 1; }
+        #draw-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+        
+        .nav-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 45px; height: 45px; border-radius: 50%;
+            background: rgba(240, 240, 240, 0.9); border: 1px solid #ccc;
+            color: #333; font-size: 1.4rem; cursor: pointer; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .prev { left: 15px; } .next { right: 15px; }
 
-        /* --- MOBILE RESPONSIVE (ALT TARAF DÜZELTMESİ) --- */
+        /* --- SAĞ PANEL (TAM OTURAN SİSTEM) --- */
+        .right-panel {
+            width: 320px;
+            background: var(--panel-bg); border-radius: 20px;
+            padding: 20px;
+            display: flex; flex-direction: column; /* Alt alta diz */
+            justify-content: space-between; /* Yay */
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2); flex-shrink: 0;
+            overflow: hidden; /* Taşmayı engelle */
+        }
+        .panel-header { text-align: center; margin-bottom: 10px; flex-shrink: 0; }
+        .panel-header h2 {
+            font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); margin: 0; font-size: 1.8rem;
+        }
+        .counter { font-size: 0.9rem; color: #aaa; margin-left: 10px; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; }
+        
+        /* ŞIKLAR (Esnek Grid Yapısı) */
+        .options-grid { 
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 Sütun */
+            grid-template-rows: 1fr 1fr;    /* 2 Satır (Eşit Yükseklik) */
+            gap: 12px;
+            flex: 1; /* Kalan TÜM boşluğu doldur */
+            margin: 15px 0; /* Üstten ve alttan biraz boşluk */
+            min-height: 0; /* İçeriğin taşmasını engellemek için kritik */
+        }
+        
+        .option-btn {
+            width: 100%; height: 100%; /* Bulunduğu kutuyu tamamen kapla */
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px; color: #eee; font-family: 'Orbitron', sans-serif; 
+            font-size: 2.2rem; /* Font BÜYÜK */
+            cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .option-btn:hover { background: rgba(255,255,255,0.06); }
+        .option-btn.correct { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0, 230, 118, 0.1); box-shadow: 0 0 15px rgba(0, 230, 118, 0.3); }
+        .option-btn.wrong { border-color: var(--neon-red); color: var(--neon-red); background: rgba(255, 59, 48, 0.1); box-shadow: 0 0 15px rgba(255, 59, 48, 0.3); }
+        
+        .signature { text-align: center; font-size: 0.75rem; color: #666; flex-shrink: 0; }
+        .signature b { color: var(--brand-orange); } 
+
+        /* MOBİL UYUMLULUK */
         @media (max-width: 900px) {
-            .main-container { 
-                flex-direction: column; 
-                padding: 10px; 
-                gap: 10px;
-                /* KRİTİK: Mobilde içeriğin sığması için scroll açtık */
-                overflow-y: auto; 
-                display: block; /* Flex yerine block yaparak akışı serbest bıraktık */
-            }
-
-            /* Sidebar (Üst Şerit) */
+            .main-container { flex-direction: column; padding: 10px; height: auto; overflow-y: auto; display: block; }
+            
             .sidebar { 
-                width: 100%; 
-                height: 55px; 
-                flex-direction: row; 
-                overflow-x: auto; 
-                padding: 5px 0; 
-                border-bottom: 1px solid rgba(255,255,255,0.05); 
-                align-items: center;
-                /* Yapışkan menü */
-                position: sticky;
-                top: 0;
-                background: var(--bg-dark);
-                z-index: 20;
-                margin-bottom: 10px;
+                width: 100%; height: 70px; flex-direction: row; 
+                overflow-x: auto; overflow-y: hidden;
+                padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,0.1);
+                position: sticky; top: 0; background: var(--bg-dark); z-index: 20;
+                margin-bottom: 10px; gap: 10px;
             }
-            .q-nav-btn { width: 45px; height: 45px; margin: 0 6px; font-size: 0.9rem; }
-            
-            /* Resim Alanı */
-            .stage-wrapper { 
-                width: 100%; 
-                /* Ekranın yarısından az olsun ki butonlara yer kalsın */
-                height: 38vh; 
-                min-height: 250px;
-                border-radius: 12px;
-                margin-bottom: 10px;
-            }
-            .nav-arrow { width: 35px; height: 35px; font-size: 1rem; opacity: 0.8; }
-            
-            /* Kontrol Paneli (Alt Kısım) */
-            .right-panel { 
-                width: 100%; 
-                height: auto; /* Sabit yükseklik değil, içeriğe göre */
-                min-height: 220px;
-                border-radius: 15px; 
-                padding: 15px; 
-                box-shadow: none; 
-                background: rgba(22, 27, 34, 0.95);
-                /* En alttan boşluk bırakalım ki telefon barına denk gelmesin */
-                padding-bottom: 30px; 
-            }
+            .q-nav-btn { width: 50px; height: 50px; margin: 0; font-size: 1rem; }
 
-            .panel-header { margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-            .panel-header h2 { font-size: 1.4rem; text-align: left; }
-            .panel-header p { display: none; }
+            .stage-wrapper { height: 40vh; min-height: 250px; border-radius: 15px; margin-bottom: 15px; }
+            .nav-arrow { width: 40px; height: 40px; font-size: 1.2rem; }
             
-            .options-grid { 
-                gap: 10px; 
-                /* Buton yüksekliği */
-                height: 120px; 
-            }
-            .option-btn { font-size: 1.6rem; border-radius: 10px; }
+            .right-panel { width: 100%; height: auto; padding-bottom: 30px; }
+            .panel-header h2 { font-size: 1.5rem; text-align: left; display: flex; justify-content: space-between; }
             
-            .signature { margin-top: 15px; font-size: 0.65rem; }
-            
-            /* Logo Mobilde Düzenleme */
-            .logo .desc { display: none; } /* Mobilde çok uzun yazıyı gizle, sığmıyor */
+            /* Mobilde çok uzamaması için sabit yükseklik veriyoruz */
+            .options-grid { height: 250px; flex: none; } 
+            .option-btn { font-size: 1.8rem; }
+            .logo .desc { display: none; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">
-            tolga<span>aydos</span>.com <span class="desc">Fen Bilimleri Platformu Z-Kitap Uygulaması</span>
-        </div>
-        
+        <div class="logo">tolga<span>aydos</span>.com <span class="desc">Fen Bilimleri Platformu</span></div>
         <div class="toolbar">
-            <button title="Kalem">✎</button>
-            <button title="Silgi">⌫</button>
+            <button id="btn-draw" onclick="toggleDrawing()" title="Kalem">✎</button>
+            <button id="btn-erase" onclick="clearCanvas()" title="Temizle">⌫</button>
             <button onclick="toggleFS()" title="Tam Ekran">⛶</button>
         </div>
     </header>
@@ -281,47 +194,61 @@
         
         <div class="sidebar" id="sidebar"></div>
 
-        <div class="stage-wrapper">
+        <div class="stage-wrapper" id="stage">
             <button class="nav-arrow prev" onclick="changeQ(-1)">❮</button>
             <div class="image-container">
                 <img id="q-img" src="" alt="Soru">
+                <canvas id="draw-canvas"></canvas>
             </div>
             <button class="nav-arrow next" onclick="changeQ(1)">❯</button>
         </div>
 
         <div class="right-panel">
             <div class="panel-header">
-                <h2 id="q-title">SORU 01</h2>
-                <p>Cevabınızı seçiniz</p>
+                <h2>SORU <span id="q-idx">01</span> <span class="counter" id="q-total">/ 9</span></h2>
             </div>
-
+            
             <div class="options-grid">
                 <button class="option-btn" onclick="check(this, 'A')">A</button>
                 <button class="option-btn" onclick="check(this, 'B')">B</button>
                 <button class="option-btn" onclick="check(this, 'C')">C</button>
                 <button class="option-btn" onclick="check(this, 'D')">D</button>
             </div>
-
-            <div class="signature">
-                Designed by <b>tolgaaydos.com</b>
-            </div>
+            
+            <div class="signature">Designed by <b>tolgaaydos.com</b></div>
         </div>
     </div>
 
     <script>
+        // ============================================
+        // DOSYA İSİMLERİNİ BURAYA EKLE
+        // ============================================
         const questions = [
             "1B.jpg", 
             "2C.jpg", 
             "3D.jpg", 
             "4A.jpg", 
-            "5C.jpg"
+            "5C.jpg",
+            "6A.jpg",
+            "7B.jpg",
+            "8D.jpg",
+            "9C.jpg"
         ];
+        // ============================================
 
         let current = 0;
+        let isDrawingMode = false;
+        let isDrawing = false;
+        const canvas = document.getElementById('draw-canvas');
+        const ctx = canvas.getContext('2d');
+        let lastX = 0, lastY = 0;
 
         function init() {
             renderSidebar();
+            setupCanvas();
+            document.getElementById('q-total').innerText = "/ " + questions.length;
             load(0);
+            window.addEventListener('resize', resizeCanvas);
         }
 
         function renderSidebar() {
@@ -339,50 +266,106 @@
         function load(idx) {
             if(idx < 0 || idx >= questions.length) return;
             current = idx;
+            clearCanvas();
 
             const img = document.getElementById('q-img');
             img.style.opacity = 0;
             
             setTimeout(() => {
                 img.src = questions[idx];
-                document.getElementById('q-title').innerText = "SORU " + (idx + 1).toString().padStart(2, '0');
+                document.getElementById('q-idx').innerText = (idx + 1).toString().padStart(2, '0');
                 
                 const btns = document.querySelectorAll('.q-nav-btn');
                 btns.forEach((b, i) => {
                     const isActive = i === idx;
                     b.classList.toggle('active', isActive);
-                    if(isActive && window.innerWidth < 900) {
-                        b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-                    }
+                    if(isActive) b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
                 });
 
                 resetBtns();
-                img.onload = () => img.style.opacity = 1;
+                img.onload = () => { img.style.opacity = 1; resizeCanvas(); };
             }, 100);
         }
 
-        function changeQ(dir) {
-            load(current + dir);
+        function changeQ(dir) { load(current + dir); }
+
+        // --- Çizim Fonksiyonları ---
+        function setupCanvas() {
+            canvas.addEventListener('mousedown', startD);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopD);
+            canvas.addEventListener('mouseout', stopD);
+            canvas.addEventListener('touchstart', (e) => {
+                const t = e.touches[0];
+                canvas.dispatchEvent(new MouseEvent('mousedown', { clientX: t.clientX, clientY: t.clientY }));
+            });
+            canvas.addEventListener('touchmove', (e) => {
+                const t = e.touches[0];
+                canvas.dispatchEvent(new MouseEvent('mousemove', { clientX: t.clientX, clientY: t.clientY }));
+            });
+            canvas.addEventListener('touchend', () => canvas.dispatchEvent(new MouseEvent('mouseup', {})));
+            resizeCanvas();
         }
 
+        function resizeCanvas() {
+            const container = document.querySelector('.image-container');
+            if(container) {
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+                ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.lineWidth = 3; ctx.strokeStyle = '#e74c3c';
+            }
+        }
+
+        function toggleDrawing() {
+            isDrawingMode = !isDrawingMode;
+            const btn = document.getElementById('btn-draw');
+            const stage = document.getElementById('stage');
+            if(isDrawingMode) {
+                btn.classList.add('active-tool');
+                canvas.style.pointerEvents = 'auto';
+                stage.style.cursor = 'crosshair';
+            } else {
+                btn.classList.remove('active-tool');
+                canvas.style.pointerEvents = 'none';
+                stage.style.cursor = 'default';
+            }
+        }
+
+        function startD(e) {
+            if(!isDrawingMode) return;
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            lastX = e.clientX - rect.left;
+            lastY = e.clientY - rect.top;
+        }
+
+        function draw(e) {
+            if(!isDrawing || !isDrawingMode) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+            [lastX, lastY] = [x, y];
+        }
+
+        function stopD() { isDrawing = false; }
+        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        // --- Cevap Kontrolü ---
         function resetBtns() {
-            const btns = document.querySelectorAll('.option-btn');
-            btns.forEach(b => {
-                b.className = 'option-btn';
-                b.style.pointerEvents = 'auto';
+            document.querySelectorAll('.option-btn').forEach(b => {
+                b.className = 'option-btn'; b.style.pointerEvents = 'auto';
             });
         }
 
         function check(btn, choice) {
             const fileName = questions[current];
             const match = fileName.match(/(\d+)([A-D])/i);
-            const correct = match ? match[2].toUpperCase() : 'A';
-
+            if(!match) return;
+            const correct = match[2].toUpperCase();
             document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
-
-            if(choice === correct) {
-                btn.classList.add('correct');
-            } else {
+            if(choice === correct) btn.classList.add('correct');
+            else {
                 btn.classList.add('wrong');
                 document.querySelectorAll('.option-btn').forEach(b => {
                     if(b.textContent === correct) b.classList.add('correct');
