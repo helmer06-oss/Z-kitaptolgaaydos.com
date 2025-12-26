@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Z-Kitap: Auto & Responsive | Tolga Aydos</title>
+    <title>Z-Kitap: One Screen | Tolga Aydos</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -25,9 +25,12 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             color: white;
-            height: 100vh; height: 100dvh;
+            /* KİLİT NOKTA: Ekran boyutuna sabitle, taşmayı engelle */
+            height: 100vh; height: 100dvh; 
+            width: 100vw;
             display: flex; flex-direction: column;
-            overflow: hidden; user-select: none;
+            overflow: hidden; /* ASLA SCROLL YOK */
+            user-select: none;
         }
 
         /* HEADER */
@@ -59,9 +62,12 @@
 
         /* ANA KONTEYNER */
         .main-container {
-            display: flex; flex: 1; padding: 20px; gap: 20px;
-            height: calc(100vh - 60px); 
-            overflow: hidden; 
+            display: flex; 
+            flex: 1; /* Header'dan kalan tüm alanı kapla */
+            padding: 20px; 
+            gap: 20px;
+            overflow: hidden; /* Taşmayı engelle */
+            height: calc(100vh - 60px);
         }
 
         /* --- SOL MENÜ --- */
@@ -92,11 +98,13 @@
             box-shadow: 0 0 12px rgba(255, 159, 67, 0.4);
         }
 
-        /* ORTA ALAN */
+        /* ORTA ALAN (GÖRSEL) */
         .stage-wrapper {
-            flex: 1; background: #fff; border-radius: 15px;
+            flex: 1; /* Mevcut boşluğu doldur */
+            background: #fff; border-radius: 15px;
             position: relative; display: flex; align-items: center; justify-content: center;
             box-shadow: 0 0 30px rgba(0,0,0,0.5); overflow: hidden;
+            min-height: 0; /* Flex container içinde küçülebilmesi için şart */
         }
         .image-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
         .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; z-index: 1; }
@@ -111,7 +119,7 @@
         }
         .prev { left: 15px; } .next { right: 15px; }
 
-        /* --- SAĞ PANEL --- */
+        /* --- SAĞ PANEL (ŞIKLAR) --- */
         .right-panel {
             width: 320px;
             background: var(--panel-bg); border-radius: 20px;
@@ -127,13 +135,12 @@
         }
         .counter { font-size: 0.9rem; color: #aaa; margin-left: 10px; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; }
         
-        /* ŞIKLAR (Esnek Grid) */
         .options-grid { 
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
             gap: 12px;
-            flex: 1;
+            flex: 1; /* Dikeyde kalan yeri doldur */
             margin: 15px 0;
             min-height: 0;
         }
@@ -154,54 +161,61 @@
         .signature b { color: var(--brand-orange); } 
 
         /* ========================================= */
-        /* MOBİL DÜZELTME (FIX)                      */
+        /* MOBİL İÇİN TAM EKRAN (NO SCROLL) AYARI    */
         /* ========================================= */
         @media (max-width: 900px) {
-            body {
-                overflow: auto; /* Sayfanın kendisi kayabilsin */
-                height: auto;
-                min-height: 100vh;
-            }
             .main-container { 
-                flex-direction: column; 
+                flex-direction: column; /* Alt alta diz */
                 padding: 10px; 
-                height: auto; 
-                overflow: visible; /* İçerik taşarsa göster */
-                display: flex;
+                gap: 10px;
+                /* Header düşünce kalan alan */
+                height: calc(100vh - 60px); 
             }
             
+            /* Üstteki Soru Numaraları */
             .sidebar { 
-                width: 100%; height: 70px; flex-direction: row; 
+                width: 100%; height: 60px; /* Sabit yükseklik */
+                flex-direction: row; 
                 overflow-x: auto; overflow-y: hidden;
-                padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,0.1);
-                position: sticky; top: 0; background: var(--bg-dark); z-index: 20;
-                margin-bottom: 10px; gap: 10px;
-                flex-shrink: 0;
+                padding: 5px; border: none; background: transparent;
+                flex-shrink: 0; /* Küçülmesine izin verme */
+                margin: 0;
+                gap: 8px;
             }
-            .q-nav-btn { width: 50px; height: 50px; margin: 0; font-size: 1rem; }
+            .q-nav-btn { width: 45px; height: 45px; margin: 0; font-size: 0.9rem; }
 
+            /* ORTA ALAN: En önemli kısım */
             .stage-wrapper { 
-                height: 40vh; 
-                min-height: 250px; 
-                border-radius: 15px; 
-                margin-bottom: 15px; 
-                flex-shrink: 0;
+                flex: 1; /* Kalan TÜM boşluğu burası alsın */
+                min-height: 0; /* İçerik büyük olsa bile taşma, küçül */
+                margin: 0;
+                border-radius: 10px;
             }
+            .nav-arrow { width: 35px; height: 35px; font-size: 1rem; opacity: 0.7; }
             
+            /* ALT PANEL: Şıklar */
             .right-panel { 
                 width: 100%; 
-                height: auto; 
-                padding-bottom: 30px; 
-                flex-shrink: 0;
+                height: auto; /* İçeriğe göre yükseklik */
+                padding: 10px;
+                flex-shrink: 0; /* Küçülüp kaybolmasın */
+                background: var(--panel-bg);
             }
             
+            .panel-header h2 { font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+            .counter { font-size: 0.8rem; padding: 2px 6px; }
+
+            /* Butonlar mobilde yan yana sıkışık dursun, çok yer kaplamasın */
             .options-grid { 
-                /* Mobilde butonlar ezilmesin, belirli bir boyutu korusun */
-                height: 220px; 
-                flex: none; /* Esnemeyi kapat, yüksekliği koru */
+                margin: 10px 0 5px 0;
+                gap: 8px;
+                height: 110px; /* Mobilde buton alanına sabit yükseklik ver ki görseli ezmesin */
+                flex: none; /* Esnemeyi iptal et, sabit kalsın */
             } 
-            .option-btn { font-size: 1.8rem; }
+            .option-btn { font-size: 1.5rem; }
+            
             .logo .desc { display: none; }
+            .signature { font-size: 0.65rem; margin-top: 5px; }
         }
     </style>
 </head>
@@ -219,7 +233,7 @@
     <div class="main-container">
         
         <div class="sidebar" id="sidebar">
-            <div style="color:#666; font-size:0.8rem; padding:10px; text-align:center;">Aranıyor...</div>
+            <div style="color:#666; font-size:0.8rem; padding:10px; text-align:center;">Taranıyor...</div>
         </div>
 
         <div class="stage-wrapper" id="stage">
@@ -249,12 +263,10 @@
 
     <script>
         // ============================================
-        // OTOMATİK SORU LİSTESİ (BOŞ BAŞLAR)
+        // DEĞİŞKENLER
         // ============================================
         let questions = [];
         let current = 0;
-        
-        // --- ÇİZİM DEĞİŞKENLERİ ---
         let isDrawingMode = false;
         let isDrawing = false;
         const canvas = document.getElementById('draw-canvas');
@@ -270,10 +282,8 @@
             let qNumber = 1;
             let found = true;
 
-            // Maksimum 50 soruya kadar tarar, bulunamazsa durur.
             while (found && qNumber <= 50) {
                 found = false;
-                // Her soru numarası için A, B, C, D'yi dene
                 for (let char of suffixes) {
                     const fileName = `${qNumber}${char}.jpg`;
                     const exists = await imageExists(fileName);
@@ -281,11 +291,10 @@
                     if (exists) {
                         tempQuestions.push(fileName);
                         found = true;
-                        break; // Bu numarayı bulduk, diğer harfleri denemeye gerek yok (1A bulduysak 1B'ye bakma, direk 2'ye geç)
+                        break; 
                     }
                 }
                 
-                // Eğer bu turda (mesela 4. soruda) hiçbir harf bulunamadıysa döngü biter.
                 if (found) {
                     qNumber++;
                 }
@@ -306,7 +315,7 @@
 
         function finishInit() {
             if (questions.length === 0) {
-                document.getElementById('sidebar').innerHTML = '<div style="color:white; padding:10px; font-size:0.8rem">Soru Bulunamadı.<br>Dosya adlarını kontrol et: 1A.jpg, 2B.jpg...</div>';
+                document.getElementById('sidebar').innerHTML = '<div style="color:white; padding:10px; font-size:0.8rem">Soru yok.<br>Örn: 1A.jpg</div>';
                 document.getElementById('q-idx').innerText = "00";
                 document.getElementById('q-total').innerText = "/ 0";
                 return;
@@ -320,7 +329,7 @@
         function init() {
             setupCanvas();
             window.addEventListener('resize', resizeCanvas);
-            detectQuestions(); // Taramayı başlat
+            detectQuestions();
         }
 
         function renderSidebar() {
@@ -361,7 +370,7 @@
 
         function changeQ(dir) { load(current + dir); }
 
-        // --- ÇİZİM FONKSİYONLARI ---
+        // --- ÇİZİM ---
         function setupCanvas() {
             canvas.addEventListener('mousedown', startD);
             canvas.addEventListener('mousemove', draw);
@@ -423,7 +432,7 @@
         function stopD() { isDrawing = false; }
         function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        // --- CEVAP KONTROLÜ ---
+        // --- CEVAP KONTROL ---
         function resetBtns() {
             document.querySelectorAll('.option-btn').forEach(b => {
                 b.className = 'option-btn'; b.style.pointerEvents = 'auto';
