@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Z-Kitap: Pro Features | Tolga Aydos</title>
+    <title>Z-Kitap: Final | Tolga Aydos</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* --- RENK PALETİ --- */
             --bg-dark: #0f1115;
             --panel-bg: #161b22;
             --neon-cyan: #00f2ff;
@@ -57,7 +56,6 @@
         .toolbar button.active-tool {
             background: var(--brand-orange); color: #000; border-color: var(--brand-orange);
         }
-        /* Bitir Butonu (Özel Renk) */
         #btn-finish { color: var(--neon-green); border-color: rgba(0, 230, 118, 0.3); }
 
         /* ANA KONTEYNER */
@@ -91,7 +89,6 @@
             border-color: var(--brand-orange); transform: scale(1.05);
             box-shadow: 0 0 12px rgba(255, 159, 67, 0.4);
         }
-        /* Cevaplanan soru işareti */
         .q-nav-btn.answered::after {
             content: ''; position: absolute; bottom: 5px; right: 5px;
             width: 8px; height: 8px; background: var(--neon-cyan); border-radius: 50%;
@@ -105,9 +102,14 @@
             min-height: 0;
         }
         .image-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
-        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; z-index: 1; }
+        .image-container img { max-width: 100%; max-height: 100%; object-fit: contain; z-index: 1; opacity: 0; transition: opacity 0.2s; }
         #draw-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
         
+        .no-question-msg {
+            position: absolute; color: #333; font-size: 1.2rem; text-align: center;
+            display: none;
+        }
+
         .nav-arrow {
             position: absolute; top: 50%; transform: translateY(-50%);
             width: 45px; height: 45px; border-radius: 50%;
@@ -123,24 +125,23 @@
             padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
             box-shadow: -5px 0 20px rgba(0,0,0,0.2); flex-shrink: 0; overflow: hidden; 
         }
-        .panel-header { text-align: center; margin-bottom: 10px; flex-shrink: 0; }
+        .panel-header { text-align: center; margin-bottom: 5px; flex-shrink: 0; }
         .panel-header h2 {
             font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); margin: 0; font-size: 1.8rem;
         }
         .counter { font-size: 0.9rem; color: #aaa; margin-left: 10px; background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 6px; }
         
-        /* YENİ: KRONOMETRE GÖRÜNÜMÜ */
         .timer-display {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.2rem; color: #ffeb3b;
             background: rgba(0,0,0,0.3); padding: 5px 15px;
-            border-radius: 8px; margin-top: 10px; display: inline-block;
+            border-radius: 8px; margin-top: 5px; display: inline-block;
             border: 1px solid rgba(255, 235, 59, 0.2);
         }
 
         .options-grid { 
             display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
-            gap: 12px; flex: 1; margin: 15px 0; min-height: 0;
+            gap: 12px; flex: 1; margin: 10px 0; min-height: 0;
         }
         
         .option-btn {
@@ -154,10 +155,21 @@
         .option-btn.correct { border-color: var(--neon-green); color: var(--neon-green); background: rgba(0, 230, 118, 0.1); box-shadow: 0 0 15px rgba(0, 230, 118, 0.3); }
         .option-btn.wrong { border-color: var(--neon-red); color: var(--neon-red); background: rgba(255, 59, 48, 0.1); box-shadow: 0 0 15px rgba(255, 59, 48, 0.3); }
         
+        /* YENİ SONRAKİ BUTONU */
+        .next-btn-wide {
+            width: 100%; padding: 12px; margin-bottom: 10px;
+            background: var(--brand-orange); color: #161b22;
+            border: none; border-radius: 10px;
+            font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 1rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: transform 0.1s;
+        }
+        .next-btn-wide:active { transform: scale(0.98); }
+
         .signature { text-align: center; font-size: 0.75rem; color: #666; flex-shrink: 0; }
         .signature b { color: var(--brand-orange); } 
 
-        /* SONUÇ MODALI (KARNE) */
+        /* SONUÇ MODALI */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
@@ -204,19 +216,22 @@
             .stage-wrapper { flex: 1; min-height: 0; margin: 0; border-radius: 10px; }
             .nav-arrow { width: 35px; height: 35px; font-size: 1rem; opacity: 0.7; }
             .right-panel { 
-                width: 100%; height: auto; padding: 10px; padding-bottom: 40px; 
+                width: 100%; height: auto; padding: 10px; padding-bottom: 20px; 
                 flex-shrink: 0; background: var(--panel-bg);
             }
             .panel-header { 
-                display: flex; justify-content: space-between; align-items: center; 
+                display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;
             }
             .panel-header h2 { font-size: 1.2rem; margin: 0; }
             .timer-display { margin: 0; font-size: 1rem; padding: 3px 8px; }
 
-            .options-grid { margin: 10px 0 5px 0; gap: 8px; height: 110px; flex: none; } 
+            .options-grid { margin: 8px 0; gap: 8px; height: 110px; flex: none; } 
             .option-btn { font-size: 1.5rem; }
             .logo .desc { display: none; }
             .signature { font-size: 0.65rem; margin-top: 5px; }
+            
+            /* Mobil için buton ayarı */
+            .next-btn-wide { padding: 10px; font-size: 0.9rem; margin-bottom: 5px; }
         }
     </style>
 </head>
@@ -234,14 +249,13 @@
 
     <div class="main-container">
         
-        <div class="sidebar" id="sidebar">
-            <div style="color:#666; font-size:0.8rem; padding:10px; text-align:center;">Taranıyor...</div>
-        </div>
+        <div class="sidebar" id="sidebar"></div>
 
         <div class="stage-wrapper" id="stage">
             <button class="nav-arrow prev" onclick="changeQ(-1)">❮</button>
             <div class="image-container">
                 <img id="q-img" src="" alt="Soru">
+                <div class="no-question-msg" id="no-q-msg">Soru Yüklenmedi<br><span style="font-size:0.8rem; color:#999">(Dosya Bulunamadı)</span></div>
                 <canvas id="draw-canvas"></canvas>
             </div>
             <button class="nav-arrow next" onclick="changeQ(1)">❯</button>
@@ -249,7 +263,7 @@
 
         <div class="right-panel">
             <div class="panel-header">
-                <h2>SORU <span id="q-idx">--</span> <span class="counter" id="q-total">/ --</span></h2>
+                <h2>SORU <span id="q-idx">01</span> <span class="counter" id="q-total">/ 20</span></h2>
                 <div class="timer-display" id="timer">00:00</div>
             </div>
             
@@ -259,6 +273,8 @@
                 <button class="option-btn" onclick="check(this, 'C')">C</button>
                 <button class="option-btn" onclick="check(this, 'D')">D</button>
             </div>
+
+            <button class="next-btn-wide" onclick="changeQ(1)">SONRAKİ ❯</button>
             
             <div class="signature">Designed by <b>tolgaaydos.com</b></div>
         </div>
@@ -290,7 +306,14 @@
     </div>
 
     <script>
-        let questions = [];
+        // ============================================
+        // AYARLAR
+        // ============================================
+        const TOTAL_QUESTIONS_LIMIT = 20; 
+        
+        // ============================================
+        // DEĞİŞKENLER
+        // ============================================
         let current = 0;
         let isDrawingMode = false;
         let isDrawing = false;
@@ -298,32 +321,78 @@
         const ctx = canvas.getContext('2d');
         let lastX = 0, lastY = 0;
 
-        // --- İSTATİSTİK DEĞİŞKENLERİ ---
-        let userAnswers = {}; // {0: 'true', 1: 'false', 2: null} gibi
+        let questionCache = new Array(TOTAL_QUESTIONS_LIMIT).fill(null); 
+        let userAnswers = {}; 
         let timerInterval;
         let seconds = 0;
 
-        async function detectQuestions() {
-            const tempQuestions = [];
-            const suffixes = ['A', 'B', 'C', 'D'];
-            let qNumber = 1;
-            let found = true;
+        function init() {
+            setupCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            renderSidebar(); // Anında yükle
+            load(0);
+            startTimer();
+        }
 
-            while (found && qNumber <= 50) {
-                found = false;
-                for (let char of suffixes) {
-                    const fileName = `${qNumber}${char}.jpg`;
-                    const exists = await imageExists(fileName);
-                    if (exists) {
-                        tempQuestions.push(fileName);
-                        found = true;
-                        break; 
-                    }
-                }
-                if (found) qNumber++;
+        function renderSidebar() {
+            const sb = document.getElementById('sidebar');
+            sb.innerHTML = '';
+            for(let i = 0; i < TOTAL_QUESTIONS_LIMIT; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'q-nav-btn';
+                btn.id = 'nav-btn-' + i; 
+                btn.textContent = i + 1;
+                btn.onclick = () => load(i);
+                sb.appendChild(btn);
             }
-            questions = tempQuestions;
-            finishInit();
+        }
+
+        async function load(idx) {
+            if(idx < 0 || idx >= TOTAL_QUESTIONS_LIMIT) return;
+            current = idx;
+            
+            clearCanvas();
+            document.getElementById('q-idx').innerText = (idx + 1).toString().padStart(2, '0');
+            
+            const btns = document.querySelectorAll('.q-nav-btn');
+            btns.forEach((b, i) => {
+                const isActive = i === idx;
+                b.classList.toggle('active', isActive);
+                if(isActive) b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            });
+
+            const img = document.getElementById('q-img');
+            const msg = document.getElementById('no-q-msg');
+            img.style.opacity = 0;
+            msg.style.display = 'none';
+
+            const fileName = await findQuestionFile(idx + 1);
+            
+            if(fileName) {
+                img.src = fileName;
+                img.onload = () => { img.style.opacity = 1; resizeCanvas(); };
+            } else {
+                img.src = ''; 
+                msg.style.display = 'block';
+            }
+
+            resetBtns();
+            restoreAnswerState();
+        }
+
+        async function findQuestionFile(qNum) {
+            if(questionCache[qNum - 1] !== null) return questionCache[qNum - 1];
+
+            const suffixes = ['A', 'B', 'C', 'D'];
+            for (let char of suffixes) {
+                const fName = `${qNum}${char}.jpg`;
+                if(await imageExists(fName)) {
+                    questionCache[qNum - 1] = fName;
+                    return fName;
+                }
+            }
+            questionCache[qNum - 1] = false;
+            return false;
         }
 
         function imageExists(url) {
@@ -333,78 +402,6 @@
                 img.onerror = () => resolve(false);
                 img.src = url;
             });
-        }
-
-        function finishInit() {
-            if (questions.length === 0) {
-                document.getElementById('sidebar').innerHTML = '<div style="color:white; padding:10px;">Soru yok.</div>';
-                return;
-            }
-            renderSidebar();
-            document.getElementById('q-total').innerText = "/ " + questions.length;
-            load(0);
-            startTimer(); // Sayacı Başlat
-        }
-
-        function init() {
-            setupCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            detectQuestions();
-        }
-
-        // --- KRONOMETRE ---
-        function startTimer() {
-            clearInterval(timerInterval);
-            seconds = 0;
-            timerInterval = setInterval(() => {
-                seconds++;
-                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-                const s = (seconds % 60).toString().padStart(2, '0');
-                document.getElementById('timer').innerText = `${m}:${s}`;
-            }, 1000);
-        }
-
-        function stopTimer() {
-            clearInterval(timerInterval);
-        }
-
-        function renderSidebar() {
-            const sb = document.getElementById('sidebar');
-            sb.innerHTML = '';
-            questions.forEach((_, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'q-nav-btn';
-                btn.id = 'nav-btn-' + i; // ID ekledik
-                btn.textContent = i + 1;
-                btn.onclick = () => load(i);
-                sb.appendChild(btn);
-            });
-        }
-
-        function load(idx) {
-            if(idx < 0 || idx >= questions.length) return;
-            current = idx;
-            clearCanvas();
-
-            const img = document.getElementById('q-img');
-            img.style.opacity = 0;
-            
-            setTimeout(() => {
-                img.src = questions[idx];
-                document.getElementById('q-idx').innerText = (idx + 1).toString().padStart(2, '0');
-                
-                const btns = document.querySelectorAll('.q-nav-btn');
-                btns.forEach((b, i) => {
-                    const isActive = i === idx;
-                    b.classList.toggle('active', isActive);
-                    if(isActive) b.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-                });
-
-                // Önceki cevabı hatırla veya butonları sıfırla
-                updateOptionButtonsState();
-                
-                img.onload = () => { img.style.opacity = 1; resizeCanvas(); };
-            }, 100);
         }
 
         function changeQ(dir) { load(current + dir); }
@@ -450,18 +447,41 @@
         function stopD() { isDrawing = false; }
         function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        // --- CEVAP KONTROL (Gelişmiş) ---
+        function resetBtns() {
+            document.querySelectorAll('.option-btn').forEach(b => {
+                b.className = 'option-btn'; b.style.pointerEvents = 'auto';
+            });
+        }
+
+        function restoreAnswerState() {
+            if(questionCache[current] === false) {
+                 document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
+                 return;
+            }
+            if(userAnswers.hasOwnProperty(current)) {
+                const fileName = questionCache[current];
+                if(!fileName) return;
+                const match = fileName.match(/(\d+)([A-D])/i);
+                if(match) {
+                    const correct = match[2].toUpperCase();
+                    document.querySelectorAll('.option-btn').forEach(b => {
+                        b.style.pointerEvents = 'none';
+                        if(b.textContent === correct) b.classList.add('correct');
+                    });
+                }
+            }
+        }
+
         function check(btn, choice) {
-            // Eğer bu soru zaten çözüldüyse tekrar çözdürme (İsteğe bağlı, şu an izin veriyoruz ama son cevabı kaydediyoruz)
-            const fileName = questions[current];
+            const fileName = questionCache[current];
+            if(!fileName) return;
+
             const match = fileName.match(/(\d+)([A-D])/i);
             if(!match) return;
             const correct = match[2].toUpperCase();
 
-            // Tüm butonları pasif yap
             document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
 
-            // Kaydet
             let isCorrect = false;
             if(choice === correct) {
                 btn.classList.add('correct');
@@ -472,69 +492,38 @@
                     if(b.textContent === correct) b.classList.add('correct');
                 });
             }
-
-            // Durumu sakla
-            userAnswers[current] = isCorrect; // true/false
-            
-            // Sol menüde işaretle
+            userAnswers[current] = isCorrect;
             document.getElementById('nav-btn-' + current).classList.add('answered');
         }
 
-        // Soru yüklendiğinde butonların durumunu geri getir
-        function updateOptionButtonsState() {
-            const btns = document.querySelectorAll('.option-btn');
-            btns.forEach(b => {
-                b.className = 'option-btn'; // Sıfırla
-                b.style.pointerEvents = 'auto'; // Aç
-            });
-
-            // Eğer bu soru daha önce çözüldüyse, cevabı göstermeyelim (Test mantığı).
-            // Sadece o anki tıklama gösterilir. Yeni soruya geçince temizlenir.
-            // Ancak, kullanıcı geri döndüğünde eski cevabını görmek isterse buraya logic eklenebilir.
-            // Şu anki versiyonda: Sayfa değişince cevap görseli sıfırlanıyor, ama 'userAnswers' arka planda tutuluyor.
-            
-            // Eğer daha önce çözüldüyse butonları kilitlemek istersek:
-            if(userAnswers.hasOwnProperty(current)) {
-                const fileName = questions[current];
-                const match = fileName.match(/(\d+)([A-D])/i);
-                if(match) {
-                    const correct = match[2].toUpperCase();
-                    btns.forEach(b => {
-                        b.style.pointerEvents = 'none'; // Tekrar tıklanamaz
-                        if(b.textContent === correct) b.classList.add('correct');
-                        // Yanlış cevabı bulmak zor çünkü hangisine tıkladığını kaydetmedik, sadece doğru/yanlış kaydettik.
-                        // Basitlik için sadece doğruyu gösteriyoruz çözüldüyse.
-                    });
-                }
-            }
+        function startTimer() {
+            clearInterval(timerInterval);
+            seconds = 0;
+            timerInterval = setInterval(() => {
+                seconds++;
+                const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const s = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('timer').innerText = `${m}:${s}`;
+            }, 1000);
         }
+        function stopTimer() { clearInterval(timerInterval); }
 
-        // --- SONUÇ EKRANI ---
         function finishTest() {
             stopTimer();
             let correctCount = 0;
             let wrongCount = 0;
-            let emptyCount = 0;
-
-            for(let i=0; i<questions.length; i++) {
+            for(let i=0; i<TOTAL_QUESTIONS_LIMIT; i++) {
+                if(questionCache[i] === false) continue; 
                 if(userAnswers[i] === true) correctCount++;
                 else if(userAnswers[i] === false) wrongCount++;
-                else emptyCount++;
             }
-
             document.getElementById('res-correct').innerText = correctCount;
             document.getElementById('res-wrong').innerText = wrongCount;
-            document.getElementById('res-empty').innerText = emptyCount;
+            document.getElementById('res-empty').innerText = (TOTAL_QUESTIONS_LIMIT - correctCount - wrongCount); 
             document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
-
             document.getElementById('result-modal').style.display = 'flex';
         }
-
-        function closeModal() {
-            document.getElementById('result-modal').style.display = 'none';
-            // İstersek burada oyunu sıfırlayabiliriz veya kullanıcı incelemeye devam eder.
-        }
-
+        function closeModal() { document.getElementById('result-modal').style.display = 'none'; }
         function toggleFS() {
             if(!document.fullscreenElement) document.documentElement.requestFullscreen();
             else if(document.exitFullscreen) document.exitFullscreen();
